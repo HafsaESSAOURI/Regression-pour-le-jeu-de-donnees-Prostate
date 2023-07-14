@@ -1,16 +1,16 @@
 pros=read.table("http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data")
 print(pros)
 
-#Varibles prédictives:
+#Varibles prÃ©dictives:
 #lcavol: log(volume du cancer)
 #lwaight: log(poids de la prostate)
 #age
-#lbph: log(quantité d'hyperplasie bénigne de la prostate)
-#svi: invasion des véhicules séminales
-#lcp: log(pénetration capsulaire)
+#lbph: log(quantitÃ© d'hyperplasie bÃ©nigne de la prostate)
+#svi: invasion des vÃ©hicules sÃ©minales
+#lcp: log(pÃ©netration capsulaire)
 #gleason: score de Gleason
 #pgg45: pourcentage score de Gleason 4 ou 5
-#lpsa (variable de réponse): log(antigène spécifique de la prostate)
+#lpsa (variable de rÃ©ponse): log(antigÃ¨ne spÃ©cifique de la prostate)
 
 #Conversion de la table en matrice
 #matrix_pros = as.matrix(pros)
@@ -36,13 +36,13 @@ test_X <- test_X[, setdiff(colnames(test_X), col_a_extraire)]
 test_X <- as.matrix(test_X)
 test_Y <- test_set$lpsa
 test_Y <- as.vector(test_Y)
-#nbre d'obsérvations de l'ensemble d'entrainement
+#nbre d'obsÃ©rvations de l'ensemble d'entrainement
 m_train = nrow(train_set)
 print(m_train)
 #nbre d'observations de l'ensemble de test
 m_test = nrow(test_set)
 print(m_test)
-#nbre de variables prédictives
+#nbre de variables prÃ©dictives
 p = ncol(train_X)
 print(p)
 ############# MCO ##################
@@ -54,7 +54,7 @@ MCO <-function(X,Y){
 Beta_MCO <- MCO(train_X, train_Y)
 print(Beta_MCO)
 
-#calculer l'erreur quadratique moyenne de prédiction sur les données de test
+#calculer l'erreur quadratique moyenne de prÃ©diction sur les donnÃ©es de test
 Y_hat = test_X %*% Beta_MCO
 ecarts_carres <- (Y_hat - test_Y)^2
 mse_MCO = mean(ecarts_carres)
@@ -67,7 +67,7 @@ Ridge <- function(X, Y, lambda){
   sol <- solve(t(X)%*%X + diag(lambda, p, p))%*%t(X)%*%Y
   return(sol)
 }
-#choix de lambda à l'aide du cross validation
+#choix de lambda Ã  l'aide du cross validation
 lambdas<- seq(from=0.001, to=50, by=0.001)
 erreurLambda <- numeric(length(lambdas))
 j=1
@@ -102,7 +102,7 @@ print(lambda) #0.192
 Beta_Ridge <- Ridge(train_X, train_Y, lambda)
 print(Beta_Ridge)
 
-#calculer l'erreur quadratique moyenne de prédiction sur les données de test
+#calculer l'erreur quadratique moyenne de prÃ©diction sur les donnÃ©es de test
 Y_hat = test_X %*% Beta_Ridge
 ecarts_carres <- (Y_hat - test_Y)^2
 mse_Ridge = mean(ecarts_carres)
@@ -138,7 +138,7 @@ coord_descLasso<-function(X,Y,lambda){
 
 
 
-#choix de lambda à l'aide du cross validation
+#choix de lambda Ã  l'aide du cross validation
 lambdas<- seq(from=0.001, to=5, by=0.001)
 erreurLambda <- numeric(length(lambdas))
 j=1
@@ -175,7 +175,7 @@ print(lambda)
 Beta_Lasso <- coord_descLasso(train_X, train_Y, lambda)
 print(Beta_Lasso)
 
-#calculer l'erreur quadratique moyenne de prédiction sur les données de test
+#calculer l'erreur quadratique moyenne de prÃ©diction sur les donnÃ©es de test
 Y_hat = test_X %*% Beta_Lasso
 ecarts_carres <- (Y_hat - test_Y)^2
 mse_Lasso = mean(ecarts_carres)
@@ -183,7 +183,7 @@ print(mse_Lasso)
 ####################################
 ####################################
 ############ Elastic net ###########
-#calcul de l'estimateur Elastic Net à l'aide de la méthode de descente par coordonnées
+#calcul de l'estimateur Elastic Net Ã  l'aide de la mÃ©thode de descente par coordonnÃ©es
 coord_descElasticnet<-function(X,Y,lambda1,lambda2){
   beta1<-rep(0,dim(X)[2])
   beta2<-rep(1,dim(X)[2])
@@ -244,14 +244,14 @@ print(lambdas2[lambda2_indice]) #1
 Beta_ElasticNet <- coord_descElasticnet(train_X, train_Y, lambdas1[lambda1_indice], lambdas2[lambda2_indice])
 print(Beta_ElasticNet)
 
-#calculer l'erreur quadratique moyenne de prédiction sur les données de test
+#calculer l'erreur quadratique moyenne de prÃ©diction sur les donnÃ©es de test
 Y_hat = test_X %*% Beta_ElasticNet
 ecarts_carres <- (Y_hat - test_Y)^2
 mse_ElasticNet = mean(ecarts_carres)
 print(mse_ElasticNet) #0.514182
 ######################################################################
 ######################################################################
-############ Régression en compososantes principales##################
+############ RÃ©gression en compososantes principales##################
 CP <- function(X, Y, k){
   #DVS de la matrice X
   decomposition_svd <- svd(X)
@@ -261,7 +261,7 @@ CP <- function(X, Y, k){
   sol <- V[, 1:k]%*%solve(t(diag(valeurs_singulieres[1:k],k,k))%*%diag(valeurs_singulieres[1:k],k,k))%*%t(diag(valeurs_singulieres[1:k],k,k))%*%t(U[, 1:k])%*%Y
   return(sol)
 }
-#choix de k à l'aide du cross validation
+#choix de k Ã  l'aide du cross validation
 K<- seq(from=1, to=p, by=1)
 erreurK <- numeric(length(K))
 j=1
@@ -296,7 +296,7 @@ print(k)
 Beta_CP <- CP(train_X, train_Y, k)
 print(Beta_CP)
 
-#calculer l'erreur quadratique moyenne de prédiction sur les données de test
+#calculer l'erreur quadratique moyenne de prÃ©diction sur les donnÃ©es de test
 Y_hat = test_X %*% Beta_CP
 ecarts_carres <- (Y_hat - test_Y)^2
 mse_CP = mean(ecarts_carres)
